@@ -20,7 +20,6 @@ class RTSPClient:
 		self.logger = logging.getLogger(__name__)
 		
 	def start(self, frame_callback: Callable):
-		"""Start the RTSP client with a callback for frame processing."""
 		self.frame_callback = frame_callback
 		self.running = True
 		threading.Thread(target=self._run, daemon=True).start()

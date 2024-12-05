@@ -1,5 +1,7 @@
 import asyncio
 import logging
+import time
+import cv2
 
 from config.settings import Settings
 
@@ -32,7 +34,11 @@ async def main():
 		rtsp_server.start()
 
 		def frame_callback(frame):
-			rtsp_server.push_frame(frame)
+			annotated_frame, objects = yolo_processor.process_frame(frame)
+			# annotated_frame = annotated_frame.squeeze(0).permute(1, 2, 0).cpu().numpy()
+			# cv2.imwrite(f"{time.time()}.jpg", annotated_frame)
+			print(annotated_frame.shape)
+			rtsp_server.push_frame(annotated_frame)
 		rtsp_client.start(frame_callback)
 		
 		while True:

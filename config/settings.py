@@ -6,7 +6,7 @@ class Settings:
 	RETRY_INTERVAL = int(os.getenv("RETRY_INTERVAL", "5"))
 	MAX_RETRY_INTERVAL = int(os.getenv("MAX_RETRY_INTERVAL", "100"))
 
-	RTSP_OUTPUT_PORT = os.getenv("RTSP_OUTPUT_PORT", 8553)
+	RTSP_OUTPUT_PORT = os.getenv("RTSP_OUTPUT_PORT", 8554)
 	RTSP_OUTPUT_PATH = os.getenv("RTSP_OUTPUT_PATH", "/live")
 	
 	YOLO_MODEL_PATH = os.getenv("YOLO_MODEL_PATH", "forest_fire_best.pt")
