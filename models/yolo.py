@@ -1,6 +1,7 @@
 from ultralytics import YOLO
 import logging
 import numpy as np
+import cv2
 
 class YOLOProcessor:
 	def __init__(self, model_path: str = 'forest_fire_best.pt', conf_threshold=0.7):
@@ -13,6 +14,9 @@ class YOLOProcessor:
 			results = self.model(frame, conf=self.conf_threshold)
 			annotated_frame = results[0].plot()
 			num_objects = len(results[0].boxes)
+
+			annotated_frame = np.array(annotated_frame)
+			annotated_frame = cv2.cvtColor(annotated_frame, cv2.COLOR_RGB2BGR)
 
 			return annotated_frame, num_objects
 		except Exception as e:
