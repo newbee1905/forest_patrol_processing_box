@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "aiohttp>=3.11.10",
     "aiortc>=1.9.0",
+    "opencv-python-headless>=4.10.0.84",
     "opencv-python>=4.10.0.84",
     "pygobject>=3.50.0",
     "tqdm>=4.67.1",
