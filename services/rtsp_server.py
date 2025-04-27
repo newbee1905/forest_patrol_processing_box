@@ -13,11 +13,21 @@ class CustomRTSPMediaFactory(GstRtspServer.RTSPMediaFactory):
 	def __init__(self):
 		super(CustomRTSPMediaFactory, self).__init__()
 		self.frame = None
+		# self.pipeline_str = (
+		# 	"appsrc name=source is-live=true format=GST_FORMAT_TIME "
+		# 	"caps=video/x-raw,format=RGB,width=1920,height=1080,framerate=12/1 "
+		# 	"! videoconvert ! x264enc bitrate=2000 speed-preset=fast tune=zerolatency "
+		# 	"! rtph264pay config-interval=1 name=pay0 pt=96"
+		# )
 		self.pipeline_str = (
 			"appsrc name=source is-live=true format=GST_FORMAT_TIME "
-			"caps=video/x-raw,format=RGB,width=1920,height=1080,framerate=12/1 "
-			"! videoconvert ! x264enc bitrate=2000 speed-preset=fast tune=zerolatency "
-			"! rtph264pay config-interval=1 name=pay0 pt=96"
+			"caps=video/x-raw,format=RGB,width=1920,height=1080,framerate=30/1 "
+			"! videoconvert ! video/x-raw,format=I420 "
+			"! x264enc tune=zerolatency speed-preset=ultrafast "
+			"pass=quant bitrate=2000 byte-stream=true threads=4 "
+			"key-int-max=15 intra-refresh=true ! video/x-h264,profile=baseline "
+			"! h264parse ! rtph264pay name=pay0 pt=96 "
+			"config-interval=1 aggregate-mode=zero-latency"
 		)
 		self.timestamp = 0
 		self.logger = logging.getLogger(__name__)
@@ -48,6 +58,14 @@ class CustomRTSPMediaFactory(GstRtspServer.RTSPMediaFactory):
 	def do_configure(self, rtsp_media):
 		self.appsrc = rtsp_media.get_element().get_by_name("source")
 		self.appsrc.connect("need-data", self.on_need_data)
+		# Enable real-time handling
+		# rtsp_media.set_latency(0)
+		# rtsp_media.set_protocols(
+		# 	GstRtspServer.RTSPLowerTrans.UDP | 
+		# 	GstRtspServer.RTSPLowerTrans.UDP_MCAST | 
+		# 	GstRtspServer.RTSPLowerTrans.TCP
+		# )
+
 
 class RTSPServer:
 	def __init__(self, port, path):
